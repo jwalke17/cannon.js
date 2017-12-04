@@ -66,6 +66,356 @@
                 }
             }
         });
+        demo.addScene("Heightfield_sine", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 1;
+            var sphere_granularity = 1;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 15,
+                sizeY = 15;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = -1*Math.cos(i/sizeX * Math.PI * 2)*Math.sin(j/sizeY * Math.PI * 2) + 2;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
+        demo.addScene("Heightfield_sine_smooth", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 0.0725;
+            var sphere_granularity = 1;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 15,
+                sizeY = 15;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = -1*Math.cos(i/sizeX * Math.PI * 2)*Math.sin(j/sizeY * Math.PI * 2) + 2;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
+        demo.addScene("Heightfield_rand", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 0.5;
+            var sphere_granularity = 1;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 15,
+                sizeY = 15;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = -1*granularity*Math.random() + 2;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
+        demo.addScene("Heightfield_rand2", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 2;
+            var sphere_granularity = 1;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 20,
+                sizeY = 20;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = -1*granularity*Math.random() + 2;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
+        demo.addScene("Heightfield_pyramid", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 0.5;
+            var sphere_granularity = 1;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 15,
+                sizeY = 15;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = 4*(Math.abs(i/sizeX-0.5)+Math.abs(j/sizeY-0.5))-1;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
+        demo.addScene("Heightfield_flat", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 0.1;
+            var sphere_granularity = 1;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 15,
+                sizeY = 15;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = 1;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
+        demo.addScene("Heightfield_crazy", function () {
+
+            // Init world
+            var world = demo.getWorld();
+            world.gravity.set(0, 0, -10);
+            world.broadphase = new CANNON.NaiveBroadphase();
+
+            var granularity = 0.0725;
+            var sphere_granularity = 0.5;
+
+            // Create a matrix of height values
+            var matrix = [];
+            var sizeX = 20,
+                sizeY = 20;
+            for (var i = 0.0; i < sizeX; i=i+granularity) {
+                matrix.push([]);
+                for (var j = 0; j < sizeY; j=j+granularity) {
+                    var height = -1*Math.cos(i/sizeX * Math.PI * 2)*Math.sin(j/sizeY * Math.PI * 2) + 2;
+                    if(i<=0 || i >= sizeX-granularity || j<=0 || j >= sizeY-granularity)
+                        height = 3;
+                    matrix[matrix.length-1].push(height);
+                }
+            }
+
+            // Create the heightfield
+            var hfShape = new CANNON.Heightfield(matrix, {
+                elementSize: granularity
+            });
+            var hfBody = new CANNON.Body({ mass: 0 });
+            hfBody.addShape(hfShape);
+            hfBody.position.set(-sizeX / 2, -20, -10);
+            world.addBody(hfBody);
+            demo.addVisual(hfBody);
+
+            // Add spheres
+            var mass = 1;
+            for(var i=0; i<sizeX - sphere_granularity; i=i+sphere_granularity){
+                for (var j = 0; j < sizeY - sphere_granularity; j=j+sphere_granularity) {
+                    if(i===0 || i >= sizeX-granularity || j===0 || j >= sizeY-granularity)
+                        continue;
+                    var sphereShape = new CANNON.Sphere(0.1);
+                    var sphereBody = new CANNON.Body({ mass: mass });
+                    sphereBody.addShape(sphereShape);
+                    sphereBody.position.set(sphere_granularity/4 + i, sphere_granularity/4 + j, 3.1);
+                    sphereBody.position.vadd(hfBody.position, sphereBody.position);
+                    world.addBody(sphereBody);
+                    demo.addVisual(sphereBody);
+                }
+            }
+        });
 
       demo.start();
 
